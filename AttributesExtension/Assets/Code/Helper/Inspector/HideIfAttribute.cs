@@ -20,16 +20,16 @@ public enum ComparisonType
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
 public class HideIfAttribute : PropertyAttribute
 {
-    public string comparedPropertyName { get; private set; }
-    public object comparedValue { get; private set; }
-    public ComparisonType comparisonType { get; private set; }
-    public DisablingType disablingType { get; private set; }
+    public string ComparedPropertyName { get; private set; }
+    public object ComparedValue { get; private set; }
+    public ComparisonType ComparisonType { get; private set; }
+    public DisablingType DisablingType { get; private set; }
 
     public HideIfAttribute(string comparedPropertyName, object comparedValue, ComparisonType comparisonType = ComparisonType.Equals, DisablingType disablingType = DisablingType.Hide)
     {
-        this.comparedPropertyName = comparedPropertyName;
-        this.comparedValue = comparedValue;
-        this.comparisonType = comparisonType;
-        this.disablingType = disablingType;
+        this.ComparedPropertyName = comparedPropertyName;
+        this.ComparedValue = comparedValue;
+        this.ComparisonType = comparisonType;
+        this.DisablingType = disablingType;
     }
 }

@@ -1,4 +1,4 @@
-﻿﻿using UnityEditor;
+﻿using UnityEditor;
 
 public static class SerializedPropertyExtentions
 {

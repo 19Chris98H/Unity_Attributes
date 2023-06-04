@@ -17,18 +17,18 @@ public class DropdownListDrawer : PropertyDrawer
     {
         var dropdownListAttribute = attribute as DropdownListAttribute;
 
-        if (property == null || (dropdownListAttribute.isIndex && property.type != "int")) return;
+        if (property == null || (dropdownListAttribute.IsIndex && property.type != "int")) return;
 
         var list = new List<string>();
-        if (dropdownListAttribute.targetObject == null)
+        if (dropdownListAttribute.TargetObject == null)
         {
-            if (dropdownListAttribute.useEditorData)
+            if (dropdownListAttribute.UseEditorData)
             {
-                list = EditorDataAccessor.GetEditorData().GetField<List<string>>(dropdownListAttribute.list).ToList();
+                list = EditorDataAccessor.GetEditorData().GetField<List<string>>(dropdownListAttribute.List).ToList();
             }
             else
             {
-                var listProperty = property.serializedObject.FindProperty(dropdownListAttribute.list);
+                var listProperty = property.serializedObject.FindProperty(dropdownListAttribute.List);
 
                 if (listProperty == null) return;
 
@@ -39,10 +39,10 @@ public class DropdownListDrawer : PropertyDrawer
         }
         else
         {
-            var targetProperty = property.serializedObject.FindProperty(dropdownListAttribute.targetObject);
+            var targetProperty = property.serializedObject.FindProperty(dropdownListAttribute.TargetObject);
             if (targetProperty == null)
             {
-                Debug.LogWarning($"Object {dropdownListAttribute.targetObject} could not be found");
+                Debug.LogWarning($"Object {dropdownListAttribute.TargetObject} could not be found");
                 return;
             }
 
@@ -50,10 +50,10 @@ public class DropdownListDrawer : PropertyDrawer
             if (targetObject == null)
                 return;
 
-            var listProperty = targetObject.GetType().GetField(dropdownListAttribute.list);
+            var listProperty = targetObject.GetType().GetField(dropdownListAttribute.List);
             if (listProperty == null)
             {
-                Debug.LogWarning($"Property {dropdownListAttribute.list} of object {dropdownListAttribute.targetObject} could not be found");
+                Debug.LogWarning($"Property {dropdownListAttribute.List} of object {dropdownListAttribute.TargetObject} could not be found");
                 return;
             }
 
@@ -66,7 +66,7 @@ public class DropdownListDrawer : PropertyDrawer
 
         var index = 0;
         var isValidIndex = true;
-        if (dropdownListAttribute.isIndex)
+        if (dropdownListAttribute.IsIndex)
         {
             var value = property.intValue;
             isValidIndex = value > 0 && value < list.Count;
@@ -83,11 +83,11 @@ public class DropdownListDrawer : PropertyDrawer
 
         if (!isValidIndex) list.Insert(0, string.Empty);
 
-        var selectedIndex = EditorGUI.Popup(position, dropdownListAttribute.label, index, list.ToArray());
+        var selectedIndex = EditorGUI.Popup(position, dropdownListAttribute.Label, index, list.ToArray());
 
         if (!isValidIndex && selectedIndex == index) return;
 
-        if (dropdownListAttribute.isIndex)
+        if (dropdownListAttribute.IsIndex)
             SetValue(property, selectedIndex);
         else
             SetValue(property, list[selectedIndex]);

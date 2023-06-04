@@ -1,38 +1,35 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 [CustomPropertyDrawer(typeof(HideIfAttribute))]
 public class HideIfPropertyDrawer : PropertyDrawer
 {
-    private float propertyHeight;
+    private float _propertyHeight;
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        return propertyHeight;
+        return _propertyHeight;
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         var hideIf = attribute as HideIfAttribute;
-        var comparedField = property.serializedObject.FindProperty(hideIf.comparedPropertyName);
+        var comparedField = property.serializedObject.FindProperty(hideIf?.ComparedPropertyName);
 
-        // Get the value of the compared field.
-        object comparedFieldValue = comparedField.GetValue<object>();
+        var comparedFieldValue = comparedField.GetValue<object>();
 
-        // References to the values as numeric types.
         NumericType numericComparedFieldValue = null;
         NumericType numericComparedValue = null;
 
         try
         {
-            // Try to set the numeric types.
             numericComparedFieldValue = new NumericType(comparedFieldValue);
-            numericComparedValue = new NumericType(hideIf.comparedValue);
+            numericComparedValue = new NumericType(hideIf?.ComparedValue);
         }
         catch (NumericTypeExpectedException)
         {
-            // This place will only be reached if the type is not a numeric one. If the comparison type is not valid for the compared field type, log an error.
-            if (hideIf.comparisonType != ComparisonType.Equals && hideIf.comparisonType != ComparisonType.NotEqual)
+            if (hideIf?.ComparisonType != ComparisonType.Equals && hideIf?.ComparisonType != ComparisonType.NotEqual)
             {
                 Debug.LogError("The only comparison types available to type '" + comparedFieldValue.GetType() + "' are Equals and NotEqual. (On object '" + property.serializedObject.targetObject.name + "')");
                 return;
@@ -43,15 +40,15 @@ public class HideIfPropertyDrawer : PropertyDrawer
         var conditionMet = false;
 
         // Compare the values to see if the condition is met.
-        switch (hideIf.comparisonType)
+        switch (hideIf?.ComparisonType)
         {
             case ComparisonType.Equals:
-                if (comparedFieldValue.Equals(hideIf.comparedValue))
+                if (comparedFieldValue.Equals(hideIf.ComparedValue))
                     conditionMet = true;
                 break;
 
             case ComparisonType.NotEqual:
-                if (!comparedFieldValue.Equals(hideIf.comparedValue))
+                if (!comparedFieldValue.Equals(hideIf.ComparedValue))
                     conditionMet = true;
                 break;
 
@@ -74,20 +71,20 @@ public class HideIfPropertyDrawer : PropertyDrawer
                 if (numericComparedFieldValue >= numericComparedValue)
                     conditionMet = true;
                 break;
+            
+            default:
+                throw new ArgumentOutOfRangeException();
         }
 
-        // The height of the property should be defaulted to the default height.
-        propertyHeight = base.GetPropertyHeight(property, label);
+        _propertyHeight = base.GetPropertyHeight(property, label);
 
-        // If the condition is not met, simply draw the field. Else...
         if (!conditionMet)
         {
             EditorGUI.PropertyField(position, property);
         }
         else
         {
-            //...check if the disabling type is read only. If it is, draw it disabled, else, set the height to zero.
-            if (hideIf.disablingType == DisablingType.ReadOnly)
+            if (hideIf.DisablingType == DisablingType.ReadOnly)
             {
                 GUI.enabled = false;
                 EditorGUI.PropertyField(position, property);
@@ -95,7 +92,7 @@ public class HideIfPropertyDrawer : PropertyDrawer
             }
             else
             {
-                propertyHeight = 0f;
+                _propertyHeight = 0f;
             }
         }
     }
