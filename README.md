@@ -2,7 +2,7 @@
  
 This package currently provides four attributes and may be extended in the future.
 
-You can simply download the single [package file](AttributesExtensions.unitypackage) and drop it into your project to import everything you need without cloning the whole repository. 
+You can simply download the single [package file](Attributes.unitypackage) and drop it into your project to import everything you need without cloning the whole repository. 
 
 ## Dropdown List Attribute
 As can be seen in the figure, dropdown lists can be used in the inspector with this attribute. Unlike what Unity provides out of the box, this is not a static list defined by enums, but a dynamic list that is customizable outside the code at runtime of the editor. Thus, it is possible to reference entries of a Json file, or the elements of a list defined in the inspector even of another GameObject. The attribute can be used in the following ways:
