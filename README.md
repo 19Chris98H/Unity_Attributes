@@ -60,7 +60,7 @@ public class EditorData
     public static EditorData Instance => _instance ?? (_instance = new EditorData());
     static EditorData _instance;
 
-    public List<string> Quests;
+    public List<string> quests;
 
     EditorData()
     {
@@ -68,23 +68,23 @@ public class EditorData
     }
     
     //Here I used the JsonHelper class from one of my other repositories to load the needed data, but you can use here whatever you want.
-    static void LoadQuestSystemData(ref List<string> destination, QuestElementType type)
+    static void LoadQuestData(ref List<string> destination)
     {
-        var definitions = new Dictionary<string, QuestElementDefinition>();
-        JsonHelper.LoadJson(ref definitions, "Assets/Resources/Definitions/QuestElementDefinitions.json");
-        destination = definitions.Where(entry => entry.Value.Type == type).Select(entry => entry.Key).ToList();
+        var definitions = new Dictionary<string, QuestDefinition>();
+        JsonHelper.LoadJson(ref definitions, "Assets/Resources/Definitions/QuestDefinitions.json");
+        destination = definitions.Select(entry => entry.Name).ToList();
     }
 
     public void ReloadData()
     {
-        LoadQuestSystemData(ref Quests, QuestElementType.Quest);
+        LoadQuestData(ref quests);
     }
 }
 
 public class Quest : MonoBehaviour
 {
-    [DropdownList("Quest", "Quests", true)]
-    public string Quest;
+    [DropdownList("Quest", "quests", true)]
+    public string quest;
 }
 ```
 
